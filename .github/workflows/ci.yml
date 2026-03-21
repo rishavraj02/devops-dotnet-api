@@ -22,7 +22,7 @@ jobs:
         run: dotnet restore DevOps.sln
 
       - name: Build application
-        run: dotnet build DevOps.sln --Configuration Release --no-restore
+        run: dotnet build DevOps.sln --configuration release --no-restore
 
       - name: Run tests
         run: dotnet test DevOps.sln --configuration release --no-build --verbosity normal
