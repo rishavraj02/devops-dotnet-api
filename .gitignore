@@ -1,6 +1,9 @@
 # .NET Build Outputs
 bin/
 obj/
+**/bin/
+**/obj/
+TestResults/
 
 # User-specific files
 .vs/

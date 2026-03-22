@@ -25,10 +25,16 @@ jobs:
         run: dotnet build DevOps.sln --configuration release --no-restore
 
       - name: Run tests
-        run: dotnet test DevOps.sln --configuration release --no-build --verbosity normal
+        run: dotnet test DevOps.sln --configuration release --no-build --verbosity normal --logger "trx;LogFileName=test_results.trx"
 
       - name: Publish API
         run: dotnet publish MyDevOpsApi/MyDevOpsApi.csproj -c release -o ./publish
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-test-results
+          path: "**/TestResults/*.trx"
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4

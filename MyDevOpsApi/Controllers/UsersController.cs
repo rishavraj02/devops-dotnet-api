@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MyDevOpsApi.Services;
+
+namespace MyDevOpsApi.Controllers;
+
 [ApiController]
 [Route("users")]
 public class UsersController : ControllerBase
