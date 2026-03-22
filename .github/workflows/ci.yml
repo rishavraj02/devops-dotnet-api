@@ -26,3 +26,12 @@ jobs:
 
       - name: Run tests
         run: dotnet test DevOps.sln --configuration release --no-build --verbosity normal
+
+      - name: Publish API
+        run: dotnet publish MyDevOpsApi/MyDevOpsApi.csproj -c release -o ./publish
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: devops-api-package
+          path: ./publish
