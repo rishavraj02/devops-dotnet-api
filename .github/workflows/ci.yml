@@ -8,27 +8,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: setup .NET
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.x"
 
-      - name: restore dependencies
+      - name: Restore dependencies
         run: dotnet restore DevOps.sln
 
       - name: Build application
-        run: dotnet build DevOps.sln --configuration release --no-restore
+        run: dotnet build DevOps.sln --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test DevOps.sln --configuration release --no-build --verbosity normal --logger "trx;LogFileName=test_results.trx"
+        run: dotnet test DevOps.sln --configuration Release --no-build --logger "trx;LogFileName=test_results.trx"
 
       - name: Publish API
-        run: dotnet publish MyDevOpsApi/MyDevOpsApi.csproj -c release -o ./publish
+        run: dotnet publish MyDevOpsApi/MyDevOpsApi.csproj -c Release -o ./publish --no-build
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
@@ -41,3 +42,11 @@ jobs:
         with:
           name: devops-api-package
           path: ./publish
+
+      - name: Deploy to Azure Web App
+        if: success()
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: mydevops-api-rishav
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish
